@@ -63,4 +63,35 @@ public class StackBasedCalculatorTest {
     public void testPrecedenceDivisionOverSubtraction() {
         assertEquals(4, calculator.calculate("6 - 6 / 3"), "Operator precedence for division failed");
     }
+
+    @Test
+    public void testMalformedExpressionMissingOperand() {
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculator.calculate("3 +"));
+        assertTrue(exception.getMessage().contains("Malformed expression"), "Malformed expression handling failed");
+    }
+
+    @Test
+    public void testMalformedExpressionExtraOperand() {
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculator.calculate("2 3 +"));
+        assertTrue(exception.getMessage().contains("Malformed expression"), "Malformed expression with extra operand failed");
+    }
+
+    @Test
+    public void testUnsupportedOperator() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.calculate("2 ^ 3"));
+        assertTrue(exception.getMessage().contains("Unsupported operator"), "Unsupported operator handling failed");
+    }
+
+    @Test
+    public void testEmptyInput() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.calculate(""));
+        assertEquals("Expression cannot be null or empty", exception.getMessage(), "Empty input handling failed");
+    }
+
+    @Test
+    public void testNullInput() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.calculate(null));
+        assertEquals("Expression cannot be null or empty", exception.getMessage(), "Null input handling failed");
+    }
+
 }
